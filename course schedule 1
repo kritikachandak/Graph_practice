@@ -1,0 +1,76 @@
+//0 - unvisited  1-visited but not processed 2-processed
+
+class Solution {
+    
+    bool isCycle(vector<int>adj[], vector<int>&visited, int node){
+        if(visited[node]==1)
+            return true;
+        if(visited[node]==0){
+            visited[node]=1;
+            for(auto it: adj[node]){
+                if(isCycle(adj,visited,it))
+                    return true;
+            }
+            //return false;
+        }
+        visited[node]=2;
+        return false;
+    }
+public:
+    bool canFinish(int numCourses, vector<vector<int>>& prerequisites) {
+        int n = numCourses;
+        vector<int>adj[n];
+        for(auto edge: prerequisites){
+            adj[edge[1]].push_back(edge[0]);
+        }
+        vector<int>visited(n,0);
+        for(int i=0; i<n; i++){
+            if(isCycle(adj,visited,i)){
+                return false;
+            }
+        }
+        return true;
+        
+    }
+};
+
+
+
+
+//second method
+class Solution {
+    
+    bool detectcycle(int node, vector<vector<int>>&adj, int vis1[], int dfsvis[], int n){
+        vis1[node] =1;
+        dfsvis[node] =1;
+        for(auto it: adj[node]){
+            if(!vis1[it]){
+                if(detectcycle(it,adj,vis1,dfsvis,n))
+                    return true;}
+            else if(dfsvis[it]){
+                return true;
+            }
+        }
+        dfsvis[node]=0;
+        return false;
+    }
+public:
+    bool canFinish(int numCourses, vector<vector<int>>& prerequisites) {
+        int n = numCourses;
+        vector<vector<int>>adj(n);
+        for(int i=0; i<prerequisites.size(); i++){
+            adj[prerequisites[i][1]].push_back(prerequisites[i][0]);
+        }
+        
+        int vis1[n], dfsvis[n];
+        memset(vis1, 0, sizeof vis1);
+        memset(dfsvis, 0, sizeof dfsvis);
+        
+        for(int i=0; i<n; i++){
+            if(!vis1[i])
+                if(detectcycle(i, adj, vis1, dfsvis, n))
+                    return false;
+        }
+        return true;
+    }
+};
