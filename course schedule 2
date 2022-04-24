@@ -1,0 +1,59 @@
+class Solution {
+    
+    bool detectcycle(int node, int vis1[], int dfsvis[], vector<vector<int>>&adj, int n){
+        vis1[node]=1;
+        dfsvis[node]=1;
+        for(auto it: adj[node]){
+            if(!vis1[it]){
+                if(detectcycle(it,vis1, dfsvis, adj,n))
+                    return true;
+        }else if(dfsvis[it]){
+                return true;}
+        }
+        dfsvis[node]=0;
+        return false;
+    }
+    
+    bool isCycle(int n, vector<vector<int>>&adj){
+       int vis1[n], dfsvis[n];
+        memset(vis1, 0, sizeof vis1);
+        memset(dfsvis, 0, sizeof dfsvis);
+        for(int i=0; i<n; i++){
+            if(!vis1[i])
+                if(detectcycle(i, vis1, dfsvis, adj,n))
+                    return true;
+        }
+        return false;
+    }
+    void findtopo(int node, vector<vector<int>>&adj, stack<int>&st, int n, vector<bool>&visited ){
+        visited[node]=1;
+        for(auto it: adj[node]){
+            if(!visited[it])
+                findtopo(it,adj,st,n,visited);
+        }
+        st.push(node);
+    }
+public:
+    vector<int> findOrder(int numCourses, vector<vector<int>>& prerequisites) {
+        int n = numCourses;
+        int m = prerequisites.size();
+        vector<vector<int>>adj(n);
+        for(int i=0; i<prerequisites.size(); i++){
+            adj[prerequisites[i][1]].push_back(prerequisites[i][0]);
+        }
+        vector<int>topo;
+        stack<int>st;
+        if(isCycle(n,adj))
+            return topo;
+        vector<bool>visited(n,false);
+        for(int i=0; i<n; i++){
+            if(!visited[i])
+                findtopo(i,adj,st,n,visited);
+        }
+        while(!st.empty()){
+            topo.push_back(st.top());
+            st.pop();
+        }
+        return topo;
+    }
+};
