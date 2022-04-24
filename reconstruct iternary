@@ -1,0 +1,28 @@
+//unordered_map + multiset + stack
+
+class Solution {
+public:
+    vector<string> findItinerary(vector<vector<string>>& tickets) {
+        int n = tickets.size();
+        unordered_map<string,multiset<string>>adj;
+        for(int i=0; i<n; i++){
+            adj[tickets[i][0]].insert(tickets[i][1]);
+        }
+        stack<string>st;
+        vector<string>ans;
+        st.push("JFK");
+        while(!st.empty()){
+            string node = st.top();
+            if(adj[node].size()==0){
+                ans.push_back(node);
+                st.pop();}
+            else{
+                auto it = adj[node].begin();
+                st.push(*it);
+                adj[node].erase(it);
+            }
+        }
+        reverse(ans.begin(), ans.end());
+        return ans;
+    }
+};
