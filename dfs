@@ -1,0 +1,45 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+class Solution{
+    void dfsrec(int node, vector<bool>&visited, vector<int>&ans, vector<int>adj[]){
+        visited[node]=1;
+        ans.push_back(node);
+        for(auto it: adj[node]){
+            if(!visited[it])
+                dfsrec(it,visited,ans,adj);
+        }
+    }
+    public:
+    
+    
+    vector<int>dfs(int V, vector<int>adj[]){
+        vector<int>ans;
+        vector<bool>visited(V+1, false);
+        for(int i=0; i<V; i++){
+            if(!visited[i])
+               dfsrec(i, visited, ans, adj);
+        }
+        return ans;
+    }
+};
+
+
+int main() {
+    int V, m;
+    cin>>V>>m;
+    int u,v;
+    vector<int>adj[V+1];
+    for(int i=0; i<m; i++){
+        cin>>u>>v;
+        adj[u].push_back(v);
+        adj[v].push_back(u);
+    }
+	Solution obj;
+	vector<int>ans = obj.dfs(V,adj);
+	for(int i=0; i<ans.size(); i++){
+	    cout<<ans[i]<<" ";
+	    
+	}
+	cout<<endl;
+}
