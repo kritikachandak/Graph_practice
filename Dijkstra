@@ -1,0 +1,39 @@
+
+#include<bits/stdc++.h>
+using namespace std;
+
+int main(){
+    int n,m,src;
+    cin>>n>>m>>src;
+    int u,v,wt;
+    vector<pair<int,int>>adj[n];
+    for(int i=0; i<n; i++){
+        cin>>u>>v>>wt;
+        adj[u].push_back({v,wt});
+        adj[v].push_back({u,wt});
+    }
+    
+    priority_queue<pair<int,int>,vector<pair<int,int> >,greater<pair<int,int> > > pq;
+    vector<int>disTo(n,INT_MAX);
+    pq.push({0,src});
+    disTo[src] =0;
+    while(!pq.empty()){
+        pair<int,int>p = pq.top();
+        int dis = p.first;
+        int prev = p.second;
+        pq.pop();
+        for(auto it: adj[prev]){
+            int next = it.first;
+            int nextdis = it.second;
+            if(disTo[next]>disTo[prev] + nextdis){
+               disTo[next] = disTo[prev] + nextdis;
+               pq.push({disTo[next], next});
+            }
+        }
+    }
+    
+    for(int i=0; i<n; i++){
+        cout<<disTo[i]<<" ";
+    }
+    return 0;
+}
