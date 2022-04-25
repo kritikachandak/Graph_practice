@@ -5,7 +5,7 @@ class Solution {
         dfsvis[node]=1;
         for(auto it: adj[node]){
             if(!vis1[it]){
-                if(detectcycle(it,vis1, dfsvis, adj,n))
+                if(detectcycle(it,vis1, dfsvis, adj,n))       //important step.. if(!detectcycle()) karte hai with return false toh test case pass nahi hoga
                     return true;
         }else if(dfsvis[it]){
                 return true;}
