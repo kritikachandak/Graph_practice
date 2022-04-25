@@ -1,0 +1,49 @@
+#include<bits/stdc++.h>
+using namespace std;
+
+class Solution{
+    public:
+    int levelnode(int n, vector<int>adj[], int x){
+        queue<int>q;
+        q.push(0);
+        vector<bool>visited(n+1, false);
+        visited[0] = true;
+        int level =0;
+        while(!q.empty()){
+            int size = q.size();
+            while(size--){
+                int node = q.front();
+                q.pop();
+                if(node == x){
+                    return level;
+                }
+                for(auto it: adj[node]){
+                    if(!visited[it]){
+                        q.push(it);
+                        visited[it] = true;
+                    }
+                }
+            }
+            level++;
+        }
+        return level;
+    }
+};
+int main(){
+    int n, m, x;   //x is the node jiska level find karna hai
+    cin>>n>>m>>x;
+    vector<int>adj[n+1];
+    int u,v;
+    for(int i=0; i<m; i++){
+        cin>>u>>v;
+        adj[u].push_back(v);
+        adj[v].push_back(u);
+    }
+    
+    Solution obj;
+    int ans = obj.levelnode(n, adj, x);
+    cout<<ans;
+    
+    return 0;
+    
+}
