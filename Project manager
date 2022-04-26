@@ -1,0 +1,79 @@
+// { Driver Code Starts
+#include <bits/stdc++.h>
+using namespace std;
+#define endl '\n'
+
+
+ // } Driver Code Ends
+class Solution{
+    public:
+    int minTime(vector<pair<int, int>> &dependency, int duration[], int n, int m) {
+        // 	Write your code here
+        
+        vector<int>adj[n+1];
+        vector<int>indegree(n+1,0);
+        for(auto& edge: dependency){
+            adj[edge.first].push_back(edge.second);
+            indegree[edge.second]++;
+        }
+        vector<int>ans(n+1, 0);
+        vector<int>visited(n+1,0);
+        queue<int>q;
+        int ansmin =0;
+        for(int i=0; i<n; i++){
+            if(indegree[i] == 0){
+                q.push(i);
+                visited[i] = 1;
+                ans[i] = duration[i];
+                ansmin = max(ansmin, ans[i]);
+            }
+        }
+        
+        while(!q.empty()){
+            int node = q.front();
+            q.pop();
+            for(auto it: adj[node]){
+                indegree[it]--;
+                ans[it] = max(ans[it], ans[node]+duration[it]);
+                if(indegree[it] == 0){
+                    ans[it] = max(ans[it], ans[node]+duration[it]);
+                    q.push(it);
+                    visited[it] = 1;
+                    
+                    ansmin= max(ansmin, ans[it]);
+                }
+            }
+        }
+        
+        //int mintime = 0;
+        for(int i=0; i<n; i++){
+            //mintime = min(mintime, ans[i]);
+            if(visited[i] == 0){
+                ansmin = -1;
+            }
+        }
+        return ansmin;
+    }
+};
+
+
+// { Driver Code Starts.
+
+int main() {
+    int t;
+    cin >> t;
+    while (t--) {
+        int n, m, x, y;
+        cin >> n >> m;
+        int duration[n + 5];
+        vector<pair<int, int>> dependency;
+        for (int i = 0; i < n; i++) cin >> duration[i];
+        for (int i = 0; i < m; i++) {
+            cin >> x >> y;
+            dependency.push_back({x, y});
+        }
+        Solution obj;
+        cout << obj.minTime(dependency, duration, n, m) << endl;
+    }
+    return 0;
+}  // } Driver Code Ends
