@@ -1,0 +1,55 @@
+// negative edge cycle detect
+// dist of source =0 ans others it will be infinity
+// run from 1 to n-1 times 
+//flag =0 now run another loop if changes hai then flag =1 negative cycle exist and break
+
+#include <bits/stdc++.h>
+using namespace std;
+
+struct node{
+    int u;
+    int v;
+    int wt;
+    node(int first, int second, int weight){
+        u = first;
+        v = second;
+        wt = weight;
+    }
+};
+
+int main() {
+	int n,m,src; cin>>n>>m>>src;
+	vector<int>disTo(n, INT_MAX);
+	disTo[src] =0;
+	
+	vector<node>edges;
+	for(int i=0; i<m; i++){
+	    int u,v,wt;
+	    cin>>u>>v>>wt;
+	    edges.push_back(node(u,v,wt));
+	}
+	
+	for(int i=1; i<=n-1; i++){
+	    for(auto it: edges){
+	        if(disTo[it.u] + it.wt < disTo[it.v]){
+	            disTo[it.v] = disTo[it.u] + it.wt;
+	        }
+	    }
+	}
+	int flag =0;
+	for(auto it: edges){
+	    if(disTo[it.u] + it.wt < disTo[it.v]){
+	        cout<<"Negative edge cycle exist";
+	        flag =1;
+	        break;
+	    }
+	}
+	
+	if(!flag){
+	    //cout<<"0";
+	    for(int i=0; i<n; i++){
+	        cout<<disTo[i];
+	    }
+	}
+	return 0;
+}
