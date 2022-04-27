@@ -1,0 +1,88 @@
+//ref: https://leetcode.com/problems/shortest-path-in-a-grid-with-obstacles-elimination/discuss/712992/C%2B%2B-or-BFS
+
+// { Driver Code Starts
+//Initial Template for C++
+
+#include <bits/stdc++.h>
+using namespace std;
+
+
+ // } Driver Code Ends
+//User function Template for C++
+
+class Solution {
+  public:
+    int shotestPath(vector<vector<int>> mat, int n, int m, int k) {
+        // code here
+        vector<vector<int>>visited(n,vector<int>(m,-1));
+        queue<vector<int>>q;
+        
+        
+        //row,col,step,wall
+        q.push({0,0,0,k});
+        while(!q.empty()){
+            auto t = q.front();
+            int row = t[0];
+            int col = t[1];
+            int step = t[2];
+            int wall = t[3];
+            q.pop();
+            
+            if(row<0 || row>=n || col<0 || col>=m){
+                continue;
+            }
+            
+            if(row == n-1 && col == m-1){
+                return step;
+            }
+            
+            if(mat[row][col] == 1){
+                if(wall>0){
+                    wall--;
+                }
+                else
+                   continue;
+            }
+            
+            if(visited[row][col] != -1 && visited[row][col] >=wall){
+                continue;
+            }
+            visited[row][col] = wall;
+            q.push({row+1, col, step+1, wall});
+            q.push({row-1, col, step+1, wall});
+            q.push({row, col+1, step+1, wall});
+            q.push({row, col-1, step+1, wall});
+            
+        }
+        return -1;
+    }
+};
+
+// { Driver Code Starts.
+
+int main() {
+    int t;
+    cin >> t;
+    while (t--) {
+        int n, m, k, x;
+        
+        cin>>n>>m>>k;
+        vector<vector<int>> mat;
+    
+        for(int i=0; i<n; i++)
+        {
+            vector<int> row;
+            for(int j=0; j<m; j++)
+            {
+                cin>>x;
+                row.push_back(x);
+            }
+            mat.push_back(row);
+        }
+
+        Solution ob;
+        cout<<ob.shotestPath(mat,n,m,k);
+        cout<<"\n";
+    }
+    return 0;
+}  // } Driver Code Ends
